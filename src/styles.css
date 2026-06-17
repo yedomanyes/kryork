@@ -99,7 +99,7 @@ img { display: block; max-width: 100%; }
   font-family: Poppins, Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "SF Pro Display", Arial, sans-serif;
   font-size: 38px;
   line-height: .9;
-  font-weight: 1000;
+  font-weight: 900;
   letter-spacing: -.08em;
   text-shadow: 0 0 24px rgba(120,216,255,.16);
 }
@@ -205,7 +205,8 @@ img { display: block; max-width: 100%; }
   position: relative;
   width: 100%;
   height: clamp(400px, calc(100vh - 120px), 750px);
-  margin: 126px 0 0;
+  padding-top: 126px;
+  margin: 0;
   background: #030303;
   overflow: hidden;
   display: flex;
@@ -1197,7 +1198,7 @@ img { display: block; max-width: 100%; }
   .brandMark span { font-size: 32px; }
   .navLinks { gap: 14px; font-size: 13px; flex-wrap: wrap; }
   .navTools { gap: 10px; }
-  .modernHeroBanner { margin-top: 100px; height: 420px; }
+  .modernHeroBanner { margin-top: 0; padding-top: 96px; height: 420px; }
   .slice-1 { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 30%, 0 45%); }
   .slice-2 { left: 0; top: 25%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 65%, 0 80%); }
   .slice-3 { left: 0; top: 60%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 100%, 0 100%); }

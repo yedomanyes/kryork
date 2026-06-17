@@ -1196,32 +1196,32 @@ function App() {
           <section className="modernHeroBanner" aria-label="KRYORK Banner">
             <div className="heroGrid">
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/hintergrund2backtround.png" alt="KRYORK Schmuck Banner 1" loading="lazy" decoding="async" />
+                <img src="/hintergrund2backtround.png" alt="KRYORK Schmuck Banner 1" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[0].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/hauptcontainergroß.png" alt="KRYORK Schmuck Banner 2" loading="lazy" decoding="async" />
+                <img src="/hauptcontainergroß.png" alt="KRYORK Schmuck Banner 2" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[1].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[2])}>
-                <img src="/kleinercontainerobenrechts.png" alt="KRYORK Schmuck Banner 3" loading="lazy" decoding="async" />
+                <img src="/kleinercontainerobenrechts.png" alt="KRYORK Schmuck Banner 3" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[2].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[3])}>
-                <img src="/hinterrgund1.png" alt="KRYORK Schmuck Banner 4" loading="lazy" decoding="async" />
+                <img src="/hinterrgund1.png" alt="KRYORK Schmuck Banner 4" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[3].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/bannerhintergrund3.png" alt="KRYORK Schmuck Banner 5" loading="lazy" decoding="async" />
+                <img src="/bannerhintergrund3.png" alt="KRYORK Schmuck Banner 5" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[0].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/icedoutding.png" alt="KRYORK Schmuck Banner 6" loading="lazy" decoding="async" />
+                <img src="/icedoutding.png" alt="KRYORK Schmuck Banner 6" loading="eager" fetchPriority="high" decoding="sync" />
                 <span className="gridItemPrice">ab {products[1].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
