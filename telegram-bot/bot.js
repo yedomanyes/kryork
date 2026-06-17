@@ -22,7 +22,7 @@ if (!token || token === 'DEIN_BOTFATHER_TOKEN_HIER') {
 
 const bot = new Telegraf(token);
 
-// Start a simple HTTP server to satisfy Render's free tier Web Service health checks
+// Start a simple HTTP server (required by Glitch so it responds to pings and stays awake)
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -38,7 +38,7 @@ app.listen(port, () => {
 bot.use(async (ctx, next) => {
   if (ctx.from) {
     try {
-      await saveUser(ctx.from);
+      saveUser(ctx.from);
     } catch (err) {
       console.error('Fehler beim Speichern des Users in DB:', err);
     }
@@ -73,7 +73,7 @@ bot.command('id', async (ctx) => {
 });
 
 bot.command('balance', async (ctx) => {
-  const balance = await getBalance(ctx.from.id);
+  const balance = getBalance(ctx.from.id);
   await ctx.reply(`💰 Dein Guthaben beträgt: *${balance.toFixed(2)} Credits*`, { parse_mode: 'Markdown' });
 });
 
@@ -88,7 +88,7 @@ bot.command('stats', async (ctx) => {
     return ctx.reply('Diesen Befehl dürfen nur Administratoren ausführen.');
   }
 
-  const stats = await getStats();
+  const stats = getStats();
   await ctx.reply(
     `📊 *Bot Statistiken:*\n\n👥 Registrierte User: *${stats.userCount}*\n📩 Support-Tickets gesamt: *${stats.ticketCount}*`,
     { parse_mode: 'Markdown' }
@@ -99,7 +99,7 @@ bot.command('stats', async (ctx) => {
 
 bot.action('balance_menu', async (ctx) => {
   await ctx.answerCbQuery();
-  const balance = await getBalance(ctx.from.id);
+  const balance = getBalance(ctx.from.id);
   await ctx.reply(
     `💰 Dein Guthaben beträgt: *${balance.toFixed(2)} Credits*`,
     Markup.inlineKeyboard([[Markup.button.callback('🔙 Hauptmenü', 'main_menu')]])
@@ -132,7 +132,7 @@ bot.action('deposit_menu', async (ctx) => {
 // Handle mock deposits
 const handleMockDeposit = (amount) => async (ctx) => {
   await ctx.answerCbQuery();
-  const newBalance = await updateBalance(ctx.from.id, amount);
+  const newBalance = updateBalance(ctx.from.id, amount);
   await ctx.reply(`✅ *Einzahlung erfolgreich!*\n\nDir wurden *${amount} Credits* gutgeschrieben.\n💰 Neues Guthaben: *${newBalance.toFixed(2)} Credits*`, { parse_mode: 'Markdown' });
 };
 
@@ -155,7 +155,7 @@ bot.action('dep_verify_crypto', async (ctx) => {
   await ctx.answerCbQuery('Überprüfe Transaktion...');
   // Simulate finding a transaction and adding 1000 credits
   const amount = 1000;
-  const newBalance = await updateBalance(ctx.from.id, amount);
+  const newBalance = updateBalance(ctx.from.id, amount);
   await ctx.reply(`✅ *Zahlung empfangen!*\n\nEs wurden *1000 Credits* via Crypto verbucht.\n💰 Neues Guthaben: *${newBalance.toFixed(2)} Credits*`, { parse_mode: 'Markdown' });
 });
 
@@ -201,7 +201,7 @@ gameKeys.forEach(gameKey => {
     bot.action(`bet_${gameKey}_${bet}`, async (ctx) => {
       await ctx.answerCbQuery();
       const userId = ctx.from.id;
-      const balance = await getBalance(userId);
+      const balance = getBalance(userId);
       
       if (balance < bet) {
         return ctx.reply(`❌ *Zu wenig Guthaben!* (Du hast: ${balance.toFixed(2)} Credits)\nBitte lade dein Guthaben über /deposit auf.`, { parse_mode: 'Markdown' });
@@ -249,7 +249,7 @@ gameKeys.forEach(gameKey => {
         }
 
         // Subtract bet first
-        await updateBalance(userId, -bet);
+        updateBalance(userId, -bet);
 
         const deck = createDeck();
         const playerHand = [deck.pop(), deck.pop()];
@@ -261,13 +261,13 @@ gameKeys.forEach(gameKey => {
         if (playerVal === 21) {
           // Blackjack!
           if (dealerVal === 21) {
-            await updateBalance(userId, bet); // Push, refund bet
+            updateBalance(userId, bet); // Push, refund bet
             await ctx.reply(
               `🃏 *Blackjack!* (Push)\n\nDeine Hand: ${formatHand(playerHand)} (${playerVal})\nDealer Hand: ${formatHand(dealerHand)} (${dealerVal})\n\nDu hast deinen Einsatz zurückerhalten. 👥`
             );
           } else {
             const winnings = Math.floor(bet * 2.5);
-            await updateBalance(userId, winnings);
+            updateBalance(userId, winnings);
             await ctx.reply(
               `🃏 *BLACKJACK!* 🥳 (Gewonnen!)\n\nDeine Hand: ${formatHand(playerHand)} (${playerVal})\nDealer Hand: ${formatHand(dealerHand)} (${dealerVal})\n\nDu gewinnst: *${winnings} Credits*! 🎉`,
               { parse_mode: 'Markdown' }
@@ -299,13 +299,13 @@ bot.action(/^run_dice_(\d+)_(under|over)$/, async (ctx) => {
   const choice = ctx.match[2];
   const userId = ctx.from.id;
 
-  const balanceBefore = await getBalance(userId);
+  const balanceBefore = getBalance(userId);
   if (balanceBefore < bet) {
     return ctx.reply('Ungenügendes Guthaben!');
   }
 
-  const res = await playDice(userId, bet, choice);
-  const newBal = await getBalance(userId);
+  const res = playDice(userId, bet, choice);
+  const newBal = getBalance(userId);
 
   if (res.win) {
     await ctx.reply(
@@ -327,13 +327,13 @@ bot.action(/^run_limbo_(\d+)_([\d.]+)$/, async (ctx) => {
   const target = parseFloat(ctx.match[2]);
   const userId = ctx.from.id;
 
-  const balanceBefore = await getBalance(userId);
+  const balanceBefore = getBalance(userId);
   if (balanceBefore < bet) {
     return ctx.reply('Ungenügendes Guthaben!');
   }
 
-  const res = await playLimbo(userId, bet, target);
-  const newBal = await getBalance(userId);
+  const res = playLimbo(userId, bet, target);
+  const newBal = getBalance(userId);
 
   if (res.win) {
     await ctx.reply(
@@ -355,13 +355,13 @@ bot.action(/^run_dt_(\d+)_(dragon|tiger|tie)$/, async (ctx) => {
   const choice = ctx.match[2];
   const userId = ctx.from.id;
 
-  const balanceBefore = await getBalance(userId);
+  const balanceBefore = getBalance(userId);
   if (balanceBefore < bet) {
     return ctx.reply('Ungenügendes Guthaben!');
   }
 
-  const res = await playDragonTiger(userId, bet, choice);
-  const newBal = await getBalance(userId);
+  const res = playDragonTiger(userId, bet, choice);
+  const newBal = getBalance(userId);
 
   let resultHeader = '';
   if (res.result === 'dragon') resultHeader = '🔴 Dragon gewinnt!';
@@ -397,7 +397,7 @@ bot.action('bj_hit', async (ctx) => {
   if (playerVal > 21) {
     // Player bust
     activeBlackjack.delete(userId);
-    const newBal = await getBalance(userId);
+    const newBal = getBalance(userId);
     await ctx.reply(
       `💥 *Überkauft! (Bust)* (Wert: *${playerVal}*)\n\nHand: ${formatHand(game.playerHand)}\n\nDu hast deinen Einsatz von *${game.bet} Credits* verloren. ❌\n💰 Neues Guthaben: *${newBal.toFixed(2)} Credits*`,
       { parse_mode: 'Markdown' }
@@ -435,28 +435,28 @@ bot.action('bj_stand', async (ctx) => {
   }
 
   const playerVal = calculateHand(game.playerHand);
-  const newBal = await getBalance(userId);
+  const newBal = getBalance(userId);
 
   let resultMsg = '';
   if (dealerVal > 21) {
     // Dealer bust, player wins
     const winnings = game.bet * 2;
-    await updateBalance(userId, winnings);
-    const finalBal = await getBalance(userId);
+    updateBalance(userId, winnings);
+    const finalBal = getBalance(userId);
     resultMsg = `🎉 *Dealer überkauft!* Du gewinnst: *${winnings} Credits*!\n💰 Neues Guthaben: *${finalBal.toFixed(2)} Credits*`;
   } else if (playerVal > dealerVal) {
     // Player wins
     const winnings = game.bet * 2;
-    await updateBalance(userId, winnings);
-    const finalBal = await getBalance(userId);
+    updateBalance(userId, winnings);
+    const finalBal = getBalance(userId);
     resultMsg = `🎉 *Du gewinnst!* Du hast den Dealer geschlagen.\nGewinn: *${winnings} Credits*!\n💰 Neues Guthaben: *${finalBal.toFixed(2)} Credits*`;
   } else if (playerVal < dealerVal) {
     // Player loses
     resultMsg = `❌ *Verloren!* Der Dealer gewinnt.\nVerlust: *-${game.bet} Credits*\n💰 Neues Guthaben: *${newBal.toFixed(2)} Credits*`;
   } else {
     // Push
-    await updateBalance(userId, game.bet);
-    const finalBal = await getBalance(userId);
+    updateBalance(userId, game.bet);
+    const finalBal = getBalance(userId);
     resultMsg = `👥 *Push (Unentschieden)!* Du bekommst deinen Einsatz zurück.\n💰 Guthaben: *${finalBal.toFixed(2)} Credits*`;
   }
 
@@ -490,7 +490,7 @@ bot.on('text', async (ctx) => {
   // 1. Check if the message is a reply from the Admin
   if (ctx.message.reply_to_message && adminTelegramId && user.id.toString() === adminTelegramId.toString()) {
     const adminReplyToId = ctx.message.reply_to_message.message_id;
-    const ticket = await getTicket(adminReplyToId);
+    const ticket = getTicket(adminReplyToId);
 
     if (ticket) {
       try {
@@ -524,7 +524,7 @@ bot.on('text', async (ctx) => {
       );
       
       // Save mapping in database
-      await saveTicket(adminMsg.message_id, user.id, ctx.message.message_id);
+      saveTicket(adminMsg.message_id, user.id, ctx.message.message_id);
     } catch (err) {
       console.error('Fehler beim Weiterleiten an Admin:', err);
     }

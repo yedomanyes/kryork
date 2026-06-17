@@ -49,7 +49,12 @@ export function formatHand(hand) {
  * Returns { win, roll, payout }
  * Configured for 99.53% RTP: Probability of winning is 49.765%
  */
-export async function playDice(userId, bet, choice) {
+/**
+ * Play Dice
+ * Returns { win, roll, payout }
+ * Configured for 99.53% RTP: Probability of winning is 49.765%
+ */
+export function playDice(userId, bet, choice) {
   const roll = Math.random() * 100; // 0 to 100 decimal roll
   let win = false;
   
@@ -63,9 +68,9 @@ export async function playDice(userId, bet, choice) {
   
   // Update balance
   if (win) {
-    await updateBalance(userId, bet); // Net win = bet
+    updateBalance(userId, bet); // Net win = bet
   } else {
-    await updateBalance(userId, -bet);
+    updateBalance(userId, -bet);
   }
   
   return { win, roll: Math.round(roll * 100) / 100, payout };
@@ -76,7 +81,7 @@ export async function playDice(userId, bet, choice) {
  * Returns { win, roll, payout }
  * Configured for 99% RTP: P(roll >= target) = 0.99 / target
  */
-export async function playLimbo(userId, bet, targetMultiplier) {
+export function playLimbo(userId, bet, targetMultiplier) {
   // Limbo formula for exactly 99% RTP: roll = 0.99 / (1 - random)
   const roll = 0.99 / (1 - Math.random());
   const formattedRoll = Math.round(Math.min(roll, 10000) * 100) / 100;
@@ -85,9 +90,9 @@ export async function playLimbo(userId, bet, targetMultiplier) {
   const payout = win ? Math.floor(bet * targetMultiplier) : 0;
   
   if (win) {
-    await updateBalance(userId, payout - bet);
+    updateBalance(userId, payout - bet);
   } else {
-    await updateBalance(userId, -bet);
+    updateBalance(userId, -bet);
   }
   
   return { win, roll: formattedRoll, payout };
@@ -97,7 +102,7 @@ export async function playLimbo(userId, bet, targetMultiplier) {
  * Play Dragon Tiger
  * Returns { dragonCard, tigerCard, result, win, payout }
  */
-export async function playDragonTiger(userId, bet, choice) {
+export function playDragonTiger(userId, bet, choice) {
   const deck = createDeck();
   const dragonCard = deck.pop();
   const tigerCard = deck.pop();
@@ -118,9 +123,9 @@ export async function playDragonTiger(userId, bet, choice) {
     } else {
       payout = bet * 2;
     }
-    await updateBalance(userId, payout - bet);
+    updateBalance(userId, payout - bet);
   } else {
-    await updateBalance(userId, -bet);
+    updateBalance(userId, -bet);
   }
   
   return { dragonCard, tigerCard, result, win, payout };
