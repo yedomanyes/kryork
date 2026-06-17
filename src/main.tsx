@@ -868,7 +868,7 @@ function App() {
                   <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <div className="discountBadge">{product.off}</div>
                     {product.images && product.images.length > 0 ? (
-                      <img src={product.images[0]} alt={product.name} className="productCardImg" />
+                      <img src={product.images[0]} alt={product.name} className="productCardImg" loading="lazy" decoding="async" />
                     ) : (
                       <ProductVisual tone={product.tone} />
                     )}
@@ -916,7 +916,7 @@ function App() {
                   const priceNum = parseFloat(item.product.price.replace(/[^0-9.,]/g, '').replace(',', '.'));
                   return (
                     <div key={idx} className="cartItem">
-                      <img src={(item.product.images && item.product.images.length > 0) ? item.product.images[0] : '/hauptcontainergroß.png'} alt={item.product.name} />
+                      <img src={(item.product.images && item.product.images.length > 0) ? item.product.images[0] : '/hauptcontainergroß.png'} alt={item.product.name} loading="lazy" decoding="async" />
                       <div className="cartItemInfo">
                         <h4>{item.product.name}</h4>
                         <p>{item.product.price}</p>
@@ -1183,32 +1183,32 @@ function App() {
           <section className="modernHeroBanner" aria-label="KRYORK Banner">
             <div className="heroGrid">
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/hintergrund2backtround.png" alt="KRYORK Schmuck Banner 1" />
+                <img src="/hintergrund2backtround.png" alt="KRYORK Schmuck Banner 1" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[0].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/hauptcontainergroß.png" alt="KRYORK Schmuck Banner 2" />
+                <img src="/hauptcontainergroß.png" alt="KRYORK Schmuck Banner 2" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[1].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[2])}>
-                <img src="/kleinercontainerobenrechts.png" alt="KRYORK Schmuck Banner 3" />
+                <img src="/kleinercontainerobenrechts.png" alt="KRYORK Schmuck Banner 3" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[2].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[3])}>
-                <img src="/hinterrgund1.png" alt="KRYORK Schmuck Banner 4" />
+                <img src="/hinterrgund1.png" alt="KRYORK Schmuck Banner 4" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[3].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/bannerhintergrund3.png" alt="KRYORK Schmuck Banner 5" />
+                <img src="/bannerhintergrund3.png" alt="KRYORK Schmuck Banner 5" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[0].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
               <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/icedoutding.png" alt="KRYORK Schmuck Banner 6" />
+                <img src="/icedoutding.png" alt="KRYORK Schmuck Banner 6" loading="lazy" decoding="async" />
                 <span className="gridItemPrice">ab {products[1].price}</span>
                 <ArrowRight size={32} className="gridItemArrow" />
               </a>
@@ -1254,23 +1254,23 @@ function App() {
       <section className="collageSection">
         <div className="collageGrid" ref={collageRef}>
           <div className="collageCard">
-            <img src="/hinterrgund1.png" alt="Chains Collection" />
+            <img src="/hinterrgund1.png" alt="Chains Collection" loading="lazy" decoding="async" />
             <div className="collageLabel">{lang === 'de' ? 'Ketten' : 'Chains'}</div>
           </div>
           <div className="collageCard">
-            <img src="/hintergrund2backtround.png" alt="Bracelets Collection" />
+            <img src="/hintergrund2backtround.png" alt="Bracelets Collection" loading="lazy" decoding="async" />
             <div className="collageLabel">{lang === 'de' ? 'Armbänder' : 'Bracelets'}</div>
           </div>
           <div className="collageCard">
-            <img src="/bannerhintergrund3.png" alt="Rings Collection" />
+            <img src="/bannerhintergrund3.png" alt="Rings Collection" loading="lazy" decoding="async" />
             <div className="collageLabel">{lang === 'de' ? 'Ringe' : 'Rings'}</div>
           </div>
           <div className="collageCard">
-            <img src="/icedoutding.png" alt="Pendants Collection" />
+            <img src="/icedoutding.png" alt="Pendants Collection" loading="lazy" decoding="async" />
             <div className="collageLabel">{lang === 'de' ? 'Anhänger' : 'Pendants'}</div>
           </div>
           <div className="collageCard">
-            <img src="/banner4hintergrund.png" alt="Iced Out Collection" />
+            <img src="/banner4hintergrund.png" alt="Iced Out Collection" loading="lazy" decoding="async" />
             <div className="collageLabel">Iced Out</div>
           </div>
         </div>
