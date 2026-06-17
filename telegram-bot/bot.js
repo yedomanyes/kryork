@@ -1,5 +1,6 @@
 import 'dotenv/config';
 import { Telegraf, Markup } from 'telegraf';
+import express from 'express';
 import { saveUser, saveTicket, getTicket, getStats, getBalance, updateBalance } from './db.js';
 import { 
   createDeck, 
@@ -20,6 +21,18 @@ if (!token || token === 'DEIN_BOTFATHER_TOKEN_HIER') {
 }
 
 const bot = new Telegraf(token);
+
+// Start a simple HTTP server to satisfy Render's free tier Web Service health checks
+const app = express();
+const port = process.env.PORT || 3000;
+
+app.get('/', (req, res) => {
+  res.send('Bot is active and running!');
+});
+
+app.listen(port, () => {
+  console.log(`Health-Check Server läuft auf Port ${port}`);
+});
 
 // Middleware to automatically save/update user in the SQLite database
 bot.use(async (ctx, next) => {
