@@ -248,6 +248,7 @@ function App() {
   };
   
   const [loginLoading, setLoginLoading] = useState(false);
+  const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [categories, setCategories] = useState<Category[]>(defaultCategories);
   const [dbReady, setDbReady] = useState(false);
 
