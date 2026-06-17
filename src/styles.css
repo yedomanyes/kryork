@@ -1191,13 +1191,13 @@ img { display: block; max-width: 100%; }
 }
 
 @media (max-width: 640px) {
-  .topBar { height: 40px; font-size: 10px; padding: 0 8px; }
+  .topBar { height: 36px; font-size: 10px; padding: 0 10px; white-space: nowrap; overflow: hidden; }
   .topBar b { margin-left: 4px; padding: 0; font-size: 10px; }
-  .premiumNav { top: 40px; min-height: 158px; padding: 12px 14px 14px; }
+  .premiumNav { top: 36px; min-height: 60px; padding: 0 14px; display: flex; align-items: center; justify-content: space-between; }
   .brandMark span { font-size: 32px; }
   .navLinks { gap: 14px; font-size: 13px; flex-wrap: wrap; }
   .navTools { gap: 10px; }
-  .modernHeroBanner { margin-top: 198px; height: 420px; }
+  .modernHeroBanner { margin-top: 100px; height: 420px; }
   .slice-1 { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 30%, 0 45%); }
   .slice-2 { left: 0; top: 25%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 65%, 0 80%); }
   .slice-3 { left: 0; top: 60%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 100%, 0 100%); }
@@ -4089,12 +4089,14 @@ img { display: block; max-width: 100%; }
 .rightDrawer {
   background: rgba(0, 0, 0, 0.5) !important;
   display: flex !important;
+  align-items: stretch;
   justify-content: flex-end;
   padding: 0 !important;
 }
 .leftDrawer {
   background: rgba(0, 0, 0, 0.5) !important;
   display: flex !important;
+  align-items: stretch;
   justify-content: flex-start;
   padding: 0 !important;
 }
@@ -4297,6 +4299,33 @@ img { display: block; max-width: 100%; }
   .navTools .mobileMenuBtn {
     display: grid !important;
   }
+}
+
+/* mobileOnly: show only on mobile */
+.mobileOnly {
+  display: none !important;
+}
+@media (max-width: 900px) {
+  .mobileOnly {
+    display: flex !important;
+  }
+}
+
+/* Drawer close button — inline in the header, not fixed */
+.drawerCloseBtn {
+  background: none;
+  border: none;
+  color: #fff;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  padding: 6px;
+  border-radius: 6px;
+  transition: background 0.2s;
+  flex-shrink: 0;
+}
+.drawerCloseBtn:hover {
+  background: rgba(255,255,255,0.08);
 }
 
 /* Responsive Desktop Polish */

@@ -564,6 +564,7 @@ function App() {
           
           <button aria-label="Account" onClick={() => setActiveOverlay('login')} className="desktopOnly"><UserRound size={24} /></button>
           
+          <button aria-label="Account" onClick={() => setActiveOverlay('login')} className="mobileOnly" style={{background:'none',border:'none',color:'#fff',cursor:'pointer',display:'flex',alignItems:'center'}}><UserRound size={22} /></button>
           <button aria-label="Bag" className="cartBtn" onClick={() => setActiveOverlay('cart')}>
             <ShoppingBag size={24} />
             {cartItems.length > 0 && <span className="cartBadge">{cartItems.reduce((acc, item) => acc + item.quantity, 0)}</span>}
@@ -906,7 +907,7 @@ function App() {
           <div className="drawerContent" onClick={(e) => e.stopPropagation()}>
             <div className="drawerHeader">
               <h2>Warenkorb</h2>
-              <button className="overlayClose" onClick={() => setActiveOverlay(null)} aria-label="Schließen"><X size={22} /></button>
+              <button className="drawerCloseBtn" onClick={() => setActiveOverlay(null)} aria-label="Schließen"><X size={22} /></button>
             </div>
             <div className="cartItemsList">
               {cartItems.length === 0 ? (
@@ -946,7 +947,7 @@ function App() {
           <div className="drawerContent" onClick={(e) => e.stopPropagation()}>
             <div className="drawerHeader">
               <h2>Menu</h2>
-              <button className="overlayClose" onClick={() => setActiveOverlay(null)} aria-label="Schließen"><X size={22} /></button>
+              <button className="drawerCloseBtn" onClick={() => setActiveOverlay(null)} aria-label="Schließen"><X size={22} /></button>
             </div>
             <nav className="mobileNavLinks">
               <a href="#shop" onClick={(e) => { setActiveOverlay(null); navigateToSection(e, 'shop'); }}>{t.shop}</a>
