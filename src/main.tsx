@@ -241,8 +241,13 @@ function App() {
   const [customImage, setCustomImage] = useState<File | null>(null);
   const [customDesc, setCustomDesc] = useState('');
   const [customStatus, setCustomStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
+  const [toast, setToast] = useState<{ msg: string; type: 'error' | 'success' | 'info' } | null>(null);
+  const showToast = (msg: string, type: 'error' | 'success' | 'info' = 'info') => {
+    setToast({ msg, type });
+    setTimeout(() => setToast(null), 4000);
+  };
   
-  const [products, setProducts] = useState<Product[]>(defaultProducts);
+  const [loginLoading, setLoginLoading] = useState(false);
   const [categories, setCategories] = useState<Category[]>(defaultCategories);
   const [dbReady, setDbReady] = useState(false);
 
@@ -598,18 +603,23 @@ function App() {
               <form className="authFormSmall" onSubmit={async (event) => {
                 event.preventDefault();
                 setLoginError('');
-                if (authMode === 'login') {
-                  const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
-                  if (error) { setLoginError(error.message); return; }
-                  if (data.user) {
-                    const { data: adminData } = await supabase.from('admins').select('email').eq('email', data.user.email).single();
-                    if (adminData) { setIsAdmin(true); setActiveOverlay(null); setActivePage('adminDashboard'); window.scrollTo(0,0); }
-                    else { setActiveOverlay(null); }
+                setLoginLoading(true);
+                try {
+                  if (authMode === 'login') {
+                    const { data, error } = await supabase.auth.signInWithPassword({ email: loginEmail, password: loginPassword });
+                    if (error) { setLoginError(error.message); return; }
+                    if (data.user) {
+                      const { data: adminData } = await supabase.from('admins').select('email').eq('email', data.user.email).single();
+                      if (adminData) { setIsAdmin(true); setActiveOverlay(null); setActivePage('adminDashboard'); window.scrollTo(0,0); }
+                      else { setActiveOverlay(null); }
+                    }
+                  } else {
+                    const { error } = await supabase.auth.signUp({ email: loginEmail, password: loginPassword });
+                    if (error) { setLoginError(error.message); return; }
+                    setLoginError('Bestätigungs-E-Mail gesendet! Bitte E-Mail bestätigen.');
                   }
-                } else {
-                  const { error } = await supabase.auth.signUp({ email: loginEmail, password: loginPassword });
-                  if (error) { setLoginError(error.message); return; }
-                  setLoginError('Bestätigungs-E-Mail gesendet! Bitte E-Mail bestätigen.');
+                } finally {
+                  setLoginLoading(false);
                 }
               }}>
                 <label>E-Mail<input value={loginEmail} onChange={(event) => setLoginEmail(event.target.value)} placeholder="du@email.de" type="email" autoComplete="email" /></label>
@@ -628,8 +638,10 @@ function App() {
                     </button>
                   </div>
                 </label>
-                {loginError && <small style={{color: loginError.includes('gesendet') ? '#4caf50' : '#ff4444'}}>{loginError}</small>}
-                <button type="submit">{authMode === 'login' ? 'Einloggen' : 'Account erstellen'}</button>
+                {loginError && <small style={{color: loginError.includes('gesendet') ? '#4caf50' : '#ff4444', display:'block', marginTop:'4px'}}>{loginError}</small>}
+                <button type="submit" disabled={loginLoading} style={{opacity: loginLoading ? 0.6 : 1}}>
+                  {loginLoading ? 'Bitte warten...' : (authMode === 'login' ? 'Einloggen' : 'Account erstellen')}
+                </button>
                 <small style={{cursor:'pointer', color:'#888', textAlign: 'center', marginTop: '12px', display: 'block'}} onClick={() => { setAuthMode(authMode === 'login' ? 'signup' : 'login'); setLoginError(''); }}>
                   {authMode === 'login' ? 'Noch kein Account? Jetzt registrieren →' : '← Zurück zum Login'}
                 </small>
@@ -739,12 +751,12 @@ function App() {
               <form onSubmit={async (e) => {
                 e.preventDefault();
                 if (!loggedInUser) {
-                  alert('Bitte logge dich ein, um eine Custom Anfrage zu senden.');
+                  showToast('Bitte logge dich ein, um eine Custom Anfrage zu senden.', 'info');
                   setActiveOverlay('login');
                   return;
                 }
                 if (!customDesc.trim()) {
-                  alert('Bitte füge eine kurze Beschreibung hinzu.');
+                  showToast('Bitte füge eine kurze Beschreibung hinzu.', 'error');
                   return;
                 }
 
@@ -753,7 +765,7 @@ function App() {
                 if (lastSubmit) {
                   const diff = Date.now() - parseInt(lastSubmit, 10);
                   if (diff < 5 * 60 * 1000) {
-                    alert('Du kannst nur alle 5 Minuten eine Custom Anfrage senden. Bitte warte noch etwas.');
+                    showToast('Du kannst nur alle 5 Minuten eine Anfrage senden. Bitte warte noch etwas.', 'error');
                     return;
                   }
                 }
@@ -788,7 +800,7 @@ function App() {
                   setCustomStatus('success');
                 } catch (err) {
                   console.error(err);
-                  alert('Fehler beim Senden. Bitte versuche es später noch einmal.');
+                  showToast('Fehler beim Senden. Bitte versuche es später noch einmal.', 'error');
                   setCustomStatus('error');
                 }
               }}>
@@ -1422,6 +1434,31 @@ function App() {
           <path d="M9.78 18.65l.28-4.23 7.68-6.94c.33-.3-.07-.46-.51-.17L7.74 13.3 3.64 12c-.89-.28-.91-.89.19-1.32L21.89 3.86c.84-.31 1.57.19 1.29 1.34l-3.07 14.47c-.23 1.1-.89 1.37-1.81.86l-4.67-3.44-2.25 2.16c-.25.25-.46.46-.91.46z" fill="#ffffff" />
         </svg>
       </a>
+      {/* Toast Notification */}
+      {toast && (
+        <div style={{
+          position: 'fixed',
+          bottom: '32px',
+          left: '50%',
+          transform: 'translateX(-50%)',
+          zIndex: 999999,
+          background: toast.type === 'error' ? '#1a0000' : toast.type === 'success' ? '#001a06' : '#0a0a14',
+          color: toast.type === 'error' ? '#ff6b6b' : toast.type === 'success' ? '#4caf50' : '#78d8ff',
+          border: `1px solid ${toast.type === 'error' ? '#ff4444' : toast.type === 'success' ? '#4caf50' : '#78d8ff'}`,
+          padding: '14px 24px',
+          borderRadius: '10px',
+          fontSize: '14px',
+          fontWeight: 600,
+          maxWidth: '90vw',
+          textAlign: 'center',
+          boxShadow: '0 8px 32px rgba(0,0,0,0.4)',
+          animation: 'slideInRight 0.3s ease',
+          pointerEvents: 'none',
+        }}>
+          {toast.msg}
+        </div>
+      )}
+
     </main>
   );
 }
