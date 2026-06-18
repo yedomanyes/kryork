@@ -1269,9 +1269,14 @@ img { display: block; max-width: 100%; }
   .heroIntro h1 { font-size: clamp(46px, 15vw, 72px); }
   .categorySection, .shopSection { padding-left: 18px; padding-right: 18px; }
   .categoryHeader, .sectionHeadClean { align-items: flex-start; flex-direction: column; }
-  .categoryGrid, .productGridClean { grid-template-columns: 1fr; }
-  .categoryCard { min-height: 430px; border-radius: 10px; }
-  .productVisualClean { height: 360px; }
+  .categoryGrid { display: flex; flex-direction: row; overflow-x: auto; gap: 12px; padding-bottom: 8px; scroll-snap-type: x mandatory; -webkit-overflow-scrolling: touch; }
+  .categoryCard { min-width: 140px; max-width: 140px; min-height: 180px; border-radius: 10px; flex: 0 0 auto; scroll-snap-align: start; }
+  .categoryCopy { left: 12px; right: 12px; bottom: 12px; }
+  .categoryCopy h3 { font-size: 18px; }
+  .categoryCopy p { display: none; }
+  .roundArrow { display: none; }
+  .productGridClean { grid-template-columns: 1fr 1fr; gap: 10px; }
+  .productVisualClean { height: auto; aspect-ratio: 1/1; }
   .authScreen { grid-template-columns: 1fr; min-height: auto; }
   .authCopy { min-height: 280px; }
   .screenOverlay { padding: 18px; align-items: center; overflow-y: auto; }
@@ -1652,13 +1657,37 @@ img { display: block; max-width: 100%; }
 }
 @media (max-width: 640px) {
   .uspBar {
-    grid-template-columns: 1fr;
-    gap: 20px;
-    margin-top: 0; /* Flow below banner on mobile */
+    display: flex;
+    flex-direction: row;
+    overflow-x: auto;
+    gap: 0;
+    padding: 0;
+    margin-top: 0;
     background: #0b0b0b;
     backdrop-filter: none;
     -webkit-backdrop-filter: none;
+    scroll-snap-type: x mandatory;
+    -webkit-overflow-scrolling: touch;
+    border-top: 1px solid rgba(255,255,255,0.08);
+    border-bottom: 1px solid rgba(255,255,255,0.08);
   }
+  .uspItem {
+    flex: 0 0 auto;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    gap: 6px;
+    padding: 16px 20px;
+    min-width: 130px;
+    border-right: 1px solid rgba(255,255,255,0.08);
+    scroll-snap-align: start;
+  }
+  .uspItem:last-child { border-right: none; }
+  .uspItem svg { width: 20px; height: 20px; }
+  .uspItem strong { font-size: 10px; letter-spacing: 0.06em; }
+  .uspItem span { display: none; }
+  .uspDivider { display: none; }
   .telegramFloating {
     bottom: 20px;
     right: 20px;
