@@ -223,8 +223,69 @@ img { display: block; max-width: 100%; }
   display: grid;
   grid-template-columns: repeat(3, 1fr);
   grid-template-rows: repeat(2, 1fr);
-  gap: 0; /* Keine Mittelstriche */
+  gap: 0;
 }
+
+.heroBannerSingle {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+}
+.heroBannerSingle img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  object-position: center;
+}
+.heroBannerOverlay {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.15) 0%, rgba(0,0,0,0.55) 100%);
+  text-align: center;
+  padding: 24px;
+}
+.heroBannerTitle {
+  font-family: 'Poppins', sans-serif;
+  font-weight: 900;
+  font-size: clamp(64px, 14vw, 160px);
+  color: #fff;
+  letter-spacing: -.06em;
+  line-height: 1;
+  margin: 0 0 12px;
+  text-shadow: 0 4px 40px rgba(0,0,0,0.4);
+}
+.heroBannerSub {
+  font-size: clamp(14px, 2.5vw, 20px);
+  color: rgba(255,255,255,0.85);
+  letter-spacing: .18em;
+  text-transform: uppercase;
+  margin: 0 0 32px;
+  font-weight: 400;
+}
+.heroBannerCta {
+  display: inline-block;
+  background: #fff;
+  color: #050505;
+  font-weight: 700;
+  font-size: 15px;
+  letter-spacing: .08em;
+  text-transform: uppercase;
+  padding: 14px 36px;
+  border-radius: 4px;
+  text-decoration: none;
+  transition: background 0.2s, color 0.2s, transform 0.2s;
+}
+.heroBannerCta:hover {
+  background: #050505;
+  color: #fff;
+  transform: translateY(-2px);
+}
+
 
 .heroGridItem {
   position: relative;

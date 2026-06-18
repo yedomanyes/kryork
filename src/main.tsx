@@ -537,8 +537,6 @@ function App() {
     <main className="pageShell" id="top">
       <div className="topBar">
         <span className="uspTicker">{uspList[lang][uspIndex]}</span>
-        <span className="topBarDivider">·</span>
-        <b>{formatShippingTimer(shippingSecondsLeft)}</b>
       </div>
 
       <header className="premiumNav">
@@ -1195,37 +1193,13 @@ function App() {
       {activePage === 'home' && (
         <>
           <section className="modernHeroBanner" aria-label="KRYORK Banner">
-            <div className="heroGrid">
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/hintergrund2backtround.png" alt="KRYORK Schmuck Banner 1" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[0].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/hauptcontainergroß.png" alt="KRYORK Schmuck Banner 2" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[1].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[2])}>
-                <img src="/kleinercontainerobenrechts.png" alt="KRYORK Schmuck Banner 3" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[2].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[3])}>
-                <img src="/hinterrgund1.png" alt="KRYORK Schmuck Banner 4" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[3].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[0])}>
-                <img src="/bannerhintergrund3.png" alt="KRYORK Schmuck Banner 5" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[0].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
-              <a href="#shop" className="heroGridItem" onClick={(e) => openProductDetail(e, products[1])}>
-                <img src="/icedoutding.png" alt="KRYORK Schmuck Banner 6" loading="eager" fetchPriority="high" decoding="sync" />
-                <span className="gridItemPrice">ab {products[1].price}</span>
-                <ArrowRight size={32} className="gridItemArrow" />
-              </a>
+            <div className="heroBannerSingle">
+              <img src="/hintergrund2backtround.png" alt="KRYORK Custom Jewellery" loading="eager" fetchPriority="high" decoding="sync" />
+              <div className="heroBannerOverlay">
+                <h1 className="heroBannerTitle">KRYORK</h1>
+                <p className="heroBannerSub">Custom Jewellery Atelier</p>
+                <a href="#shop" className="heroBannerCta" onClick={(e) => { e.preventDefault(); document.getElementById('shop')?.scrollIntoView({behavior:'smooth'}); }}>Jetzt entdecken</a>
+              </div>
             </div>
           </section>
 
