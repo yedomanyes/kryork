@@ -371,7 +371,7 @@ function App() {
   }, []);
   const [lastScrollY, setLastScrollY] = useState(0);
   const [uspIndex, setUspIndex] = useState(0);
-  const [activeFaqIndex, setActiveFaqIndex] = useState(0);
+  const [activeFaqIndex, setActiveFaqIndex] = useState(-1);
   const [lang, setLang] = useState<'de' | 'en'>('de');
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('Iced Out Anhänger mit KRYORK Schriftzug, Cuban-Link Rahmen und blauem Center-Stone');
