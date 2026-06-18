@@ -204,7 +204,7 @@ img { display: block; max-width: 100%; }
 .modernHeroBanner {
   position: relative;
   width: 100%;
-  height: clamp(420px, calc(100vh - 80px), 960px);
+  height: clamp(421px, calc(100vh - 79px), 961px);
   padding-top: 126px;
   margin: 0;
   background: #030303;
