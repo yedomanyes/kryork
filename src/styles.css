@@ -204,7 +204,7 @@ img { display: block; max-width: 100%; }
 .modernHeroBanner {
   position: relative;
   width: 100%;
-  height: clamp(400px, calc(100vh - 120px), 750px);
+  height: clamp(320px, 58vh, 620px);
   padding-top: 126px;
   margin: 0;
   background: #030303;
@@ -1260,7 +1260,7 @@ img { display: block; max-width: 100%; }
   .brandMark span { font-size: 32px; }
   .navLinks { gap: 14px; font-size: 13px; flex-wrap: wrap; }
   .navTools { gap: 10px; }
-  .modernHeroBanner { margin-top: 0; padding-top: 96px; height: 100svh; }
+  .modernHeroBanner { margin-top: 0; padding-top: 96px; height: 70vh; }
   .slice-1 { width: 100%; clip-path: polygon(0 0, 100% 0, 100% 30%, 0 45%); }
   .slice-2 { left: 0; top: 25%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 65%, 0 80%); }
   .slice-3 { left: 0; top: 60%; width: 100%; clip-path: polygon(0 20%, 100% 5%, 100% 100%, 0 100%); }
