@@ -372,7 +372,12 @@ function App() {
   const [lastScrollY, setLastScrollY] = useState(0);
   const [uspIndex, setUspIndex] = useState(0);
   const [activeFaqIndex, setActiveFaqIndex] = useState(-1);
-  const [lang, setLang] = useState<'de' | 'en'>('de');
+  const [lang, setLang] = useState<'de' | 'en'>(() => {
+    if (typeof window !== 'undefined' && navigator.language) {
+      return navigator.language.toLowerCase().startsWith('de') ? 'de' : 'en';
+    }
+    return 'en';
+  });
   const [showLangMenu, setShowLangMenu] = useState(false);
   const [customPrompt, setCustomPrompt] = useState('Iced Out Anhänger mit KRYORK Schriftzug, Cuban-Link Rahmen und blauem Center-Stone');
   const [customMaterial, setCustomMaterial] = useState<MaterialKey>('silver');
