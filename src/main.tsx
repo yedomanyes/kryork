@@ -243,33 +243,7 @@ function App() {
   const [shopFilterStyle, setShopFilterStyle] = useState<string[]>([]);
   const [shopFilterPrice, setShopFilterPrice] = useState<string | null>(null);
 
-  const filteredShopProducts = useMemo(() => {
-    let result = products;
-    if (shopFilterMaterial.length > 0) {
-      result = result.filter(p => shopFilterMaterial.some(m => (p.material && p.material.includes(m)) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
-    }
-    if (shopFilterStyle.length > 0) {
-      result = result.filter(p => shopFilterStyle.some(s => {
-        if (!p.name) return true;
-        if (s === 'Iced Out') return p.name.toLowerCase().includes('iced') || p.name.toLowerCase().includes('diamond');
-        if (s === 'Plain') return !p.name.toLowerCase().includes('iced') && !p.name.toLowerCase().includes('diamond');
-        if (s === 'Custom') return p.name.toLowerCase().includes('custom');
-        return true;
-      }));
-    }
-    if (shopFilterPrice) {
-      result = result.filter(p => {
-        if (!p.price) return true;
-        const numPrice = parseInt(p.price.replace(/[^0-9]/g, ''), 10);
-        if (isNaN(numPrice)) return true;
-        if (shopFilterPrice === 'under100') return numPrice < 100;
-        if (shopFilterPrice === '100to300') return numPrice >= 100 && numPrice <= 300;
-        if (shopFilterPrice === 'over300') return numPrice > 300;
-        return true;
-      });
-    }
-    return result;
-  }, [shopFilterMaterial, shopFilterStyle, shopFilterPrice]);
+
 
   const [customImage, setCustomImage] = useState<File | null>(null);
   const [customDesc, setCustomDesc] = useState('');
@@ -283,6 +257,35 @@ function App() {
   const [loginLoading, setLoginLoading] = useState(false);
   const [products, setProducts] = useState<Product[]>(defaultProducts);
   const [categories, setCategories] = useState<Category[]>(defaultCategories);
+  
+  const filteredShopProducts = useMemo(() => {
+    let result = products;
+    if (shopFilterMaterial.length > 0) {
+      result = result.filter(p => shopFilterMaterial.some(m => (p.material && String(p.material).includes(m)) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
+    }
+    if (shopFilterStyle.length > 0) {
+      result = result.filter(p => shopFilterStyle.some(s => {
+        if (!p.name) return true;
+        const lowerName = String(p.name).toLowerCase();
+        if (s === 'Iced Out') return lowerName.includes('iced') || lowerName.includes('diamond');
+        if (s === 'Plain') return !lowerName.includes('iced') && !lowerName.includes('diamond');
+        if (s === 'Custom') return lowerName.includes('custom');
+        return true;
+      }));
+    }
+    if (shopFilterPrice) {
+      result = result.filter(p => {
+        if (!p.price && p.price !== '0') return true;
+        const numPrice = parseInt(String(p.price).replace(/[^0-9]/g, ''), 10);
+        if (isNaN(numPrice)) return true;
+        if (shopFilterPrice === 'under100') return numPrice < 100;
+        if (shopFilterPrice === '100to300') return numPrice >= 100 && numPrice <= 300;
+        if (shopFilterPrice === 'over300') return numPrice > 300;
+        return true;
+      });
+    }
+    return result;
+  }, [products, shopFilterMaterial, shopFilterStyle, shopFilterPrice]);
   const [dbReady, setDbReady] = useState(false);
 
   // Track page view on mount — only if consent given
