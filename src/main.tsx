@@ -744,12 +744,12 @@ function App() {
               {searchResults.map((product) => (
                 <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => { setActiveOverlay(null); openProductDetail(e, product); }} style={{ textDecoration: 'none', color: 'inherit' }}>
                   <div className="discountBadge">{product.off}</div>
+                  <div className="materialBadge"><span />{product.material}</div>
                   {product.images && product.images.length > 0 ? (
                     <img src={product.images[0]} alt={product.name} className="productCardImg" />
                   ) : (
                     <ProductVisual tone={product.tone} />
                   )}
-                  <div className="materialLine"><span />{product.material}</div>
                   <h3>{product.name}</h3>
                   <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
                 </a>
@@ -971,12 +971,12 @@ function App() {
                 {filteredShopProducts.map((product) => (
                   <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <div className="discountBadge">{product.off}</div>
+                    <div className="materialBadge"><span />{product.material}</div>
                     {product.images && product.images.length > 0 ? (
                       <img src={product.images[0]} alt={product.name} className="productCardImg" loading="lazy" decoding="async" />
                     ) : (
                       <ProductVisual tone={product.tone} />
                     )}
-                    <div className="materialLine"><span />{product.material}</div>
                     <h3>{product.name}</h3>
                     <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
                   </a>
@@ -1384,12 +1384,12 @@ function App() {
           {products.slice(0, 8).map((product) => (
             <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
               <div className="discountBadge">{product.off}</div>
+              <div className="materialBadge"><span />{product.material}</div>
               {product.images && product.images.length > 0 ? (
                 <img src={product.images[0]} alt={product.name} className="productCardImg" />
               ) : (
                 <ProductVisual tone={product.tone} />
               )}
-              <div className="materialLine"><span />{product.material}</div>
               <h3>{product.name}</h3>
               <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
             </a>
