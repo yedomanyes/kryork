@@ -433,14 +433,30 @@ function App() {
     URL.revokeObjectURL(url);
   };
 
-  const searchResults = useMemo(() => {
-    const searchTerm = query.trim().toLowerCase();
-    if (!searchTerm) return products.slice(0, 4);
+  const [searchCategory, setSearchCategory] = useState<string>('all');
 
-    return products.filter((item) =>
-      `${item.name} ${item.material}`.toLowerCase().includes(searchTerm),
-    );
-  }, [query]);
+  const searchResults = useMemo(() => {
+    let filtered = products;
+
+    if (searchCategory !== 'all') {
+      if (searchCategory === 'gold') filtered = filtered.filter(p => p.tone === 'gold');
+      if (searchCategory === 'silver') filtered = filtered.filter(p => p.tone === 'silver');
+      if (searchCategory === 'ring') filtered = filtered.filter(p => p.name.toLowerCase().includes('ring'));
+      if (searchCategory === 'kette') filtered = filtered.filter(p => p.name.toLowerCase().includes('kette'));
+    }
+
+    const searchTerm = query.trim().toLowerCase();
+    if (searchTerm) {
+      filtered = filtered.filter((item) =>
+        `${item.name} ${item.material}`.toLowerCase().includes(searchTerm),
+      );
+    }
+
+    if (!searchTerm && searchCategory === 'all') {
+      return products.slice(0, 4);
+    }
+    return filtered;
+  }, [query, searchCategory]);
 
   const collageRef = React.useRef<HTMLDivElement>(null);
 
@@ -655,11 +671,30 @@ function App() {
       )}
 
       {activeOverlay === 'search' && (
-        <section className="screenOverlay compactOverlay" aria-label="Suche">
-          <button className="overlayClose" onClick={() => setActiveOverlay(null)} aria-label="Schließen"><X size={22} /></button>
+        <section className="screenOverlay" aria-label="Suche" style={{ background: '#fff', alignItems: 'flex-start', padding: 0 }}>
+          <button className="overlayClose" onClick={() => setActiveOverlay(null)} aria-label="Schließen" style={{ top: '20px', right: '20px' }}><X size={28} /></button>
           <div className="searchScreen">
-            <span>SUCHE</span>
             <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Kette, Ring, Silber, Gold suchen..." />
+            <div className="searchFilters" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '12px' }}>
+              {['all', 'gold', 'silver', 'ring', 'kette'].map(cat => (
+                <button 
+                  key={cat} 
+                  onClick={() => setSearchCategory(cat)}
+                  style={{ 
+                    padding: '8px 16px', 
+                    borderRadius: '99px', 
+                    background: searchCategory === cat ? '#050505' : '#f0f0f0', 
+                    color: searchCategory === cat ? '#fff' : '#050505',
+                    fontSize: '13px',
+                    fontWeight: 600,
+                    textTransform: 'capitalize',
+                    border: 'none',
+                    whiteSpace: 'nowrap'
+                  }}>
+                  {cat === 'all' ? 'Alle' : cat}
+                </button>
+              ))}
+            </div>
             <div className="productGridClean" style={{ marginTop: '24px' }}>
               {searchResults.map((product) => (
                 <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => { setActiveOverlay(null); openProductDetail(e, product); }} style={{ textDecoration: 'none', color: 'inherit' }}>

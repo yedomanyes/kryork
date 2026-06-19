@@ -959,7 +959,15 @@ img { display: block; max-width: 100%; }
   cursor: pointer;
 }
 .authForm small { color: #777; font-weight: 650; }
-.searchScreen,
+.searchScreen {
+  width: 100%;
+  height: 100vh;
+  border-radius: 0;
+  padding: clamp(64px, 10vw, 120px) clamp(24px, 5vw, 64px);
+  background: transparent;
+  box-shadow: none;
+  overflow-y: auto;
+}
 .inboxScreen {
   width: min(760px, 100%);
   border-radius: 26px;
