@@ -453,7 +453,7 @@ function App() {
     }
 
     if (!searchTerm && searchCategory === 'all') {
-      return products.slice(0, 4);
+      return products.slice(0, 12);
     }
     return filtered;
   }, [query, searchCategory]);
@@ -679,18 +679,8 @@ function App() {
               {['all', 'gold', 'silver', 'ring', 'kette'].map(cat => (
                 <button 
                   key={cat} 
-                  onClick={() => setSearchCategory(cat)}
-                  style={{ 
-                    padding: '8px 16px', 
-                    borderRadius: '99px', 
-                    background: searchCategory === cat ? '#050505' : '#f0f0f0', 
-                    color: searchCategory === cat ? '#fff' : '#050505',
-                    fontSize: '13px',
-                    fontWeight: 600,
-                    textTransform: 'capitalize',
-                    border: 'none',
-                    whiteSpace: 'nowrap'
-                  }}>
+                  className={`searchFilterBtn ${searchCategory === cat ? 'active' : ''}`}
+                  onClick={() => setSearchCategory(cat)}>
                   {cat === 'all' ? 'Alle' : cat}
                 </button>
               ))}

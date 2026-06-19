@@ -968,6 +968,38 @@ img { display: block; max-width: 100%; }
   box-shadow: none;
   overflow-y: auto;
 }
+.searchScreen .productGridClean {
+  grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+  gap: 16px;
+}
+@media (max-width: 640px) {
+  .searchScreen .productGridClean {
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+  }
+}
+.searchFilterBtn {
+  padding: 10px 22px;
+  border-radius: 99px;
+  border: 1px solid #e0e0e0;
+  background: #fff;
+  color: #555;
+  font-size: 14px;
+  font-weight: 500;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  white-space: nowrap;
+}
+.searchFilterBtn:hover {
+  border-color: #050505;
+  color: #050505;
+}
+.searchFilterBtn.active {
+  background: #050505;
+  color: #fff;
+  border-color: #050505;
+  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
+}
 .inboxScreen {
   width: min(760px, 100%);
   border-radius: 26px;
