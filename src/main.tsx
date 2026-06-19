@@ -675,7 +675,7 @@ function App() {
           <button className="overlayClose" onClick={() => setActiveOverlay(null)} aria-label="Schließen" style={{ top: '20px', right: '20px' }}><X size={28} /></button>
           <div className="searchScreen">
             <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Kette, Ring, Silber, Gold suchen..." />
-            <div className="searchFilters" style={{ display: 'flex', gap: '8px', overflowX: 'auto', paddingBottom: '12px', marginBottom: '12px' }}>
+            <div className="searchFilters">
               {['all', 'gold', 'silver', 'ring', 'kette'].map(cat => (
                 <button 
                   key={cat} 

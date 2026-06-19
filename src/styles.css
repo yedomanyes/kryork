@@ -934,8 +934,7 @@ img { display: block; max-width: 100%; }
   letter-spacing: .12em;
   text-transform: uppercase;
 }
-.authForm input,
-.searchScreen input {
+.authForm input {
   width: 100%;
   min-height: 58px;
   border: 1px solid #dedede;
@@ -946,8 +945,24 @@ img { display: block; max-width: 100%; }
   font-size: 18px;
   outline: none;
 }
-.authForm input:focus,
-.searchScreen input:focus { border-color: #78d8ff; box-shadow: 0 0 0 4px rgba(120,216,255,.18); }
+.authForm input:focus { border-color: #78d8ff; box-shadow: 0 0 0 4px rgba(120,216,255,.18); }
+.searchScreen input {
+  width: 100%;
+  border: none;
+  border-bottom: 2px solid #ddd;
+  border-radius: 0;
+  padding: 10px 0 20px;
+  background: transparent;
+  color: #050505;
+  font-size: clamp(28px, 5vw, 46px);
+  font-weight: 700;
+  outline: none;
+  margin: 0 0 32px 0;
+  transition: border-color 0.3s ease;
+  letter-spacing: -0.02em;
+}
+.searchScreen input:focus { border-bottom-color: #050505; box-shadow: none; }
+.searchScreen input::placeholder { color: #ccc; font-weight: 400; }
 .authForm button {
   min-height: 58px;
   border: 0;
@@ -978,27 +993,45 @@ img { display: block; max-width: 100%; }
     gap: 8px;
   }
 }
+.searchFilters {
+  display: flex;
+  gap: 32px;
+  overflow-x: auto;
+  border-bottom: 1px solid #eaeaea;
+  margin-bottom: 32px;
+  padding-bottom: 0;
+}
 .searchFilterBtn {
-  padding: 10px 22px;
-  border-radius: 99px;
-  border: 1px solid #e0e0e0;
-  background: #fff;
-  color: #555;
+  padding: 0 0 14px 0;
+  border: none;
+  border-radius: 0;
+  background: transparent;
+  color: #999;
   font-size: 14px;
-  font-weight: 500;
+  font-weight: 600;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
   cursor: pointer;
-  transition: all 0.2s ease;
+  transition: color 0.2s ease;
   white-space: nowrap;
+  position: relative;
 }
 .searchFilterBtn:hover {
-  border-color: #050505;
   color: #050505;
 }
 .searchFilterBtn.active {
+  color: #050505;
+  background: transparent;
+  box-shadow: none;
+}
+.searchFilterBtn.active::after {
+  content: '';
+  position: absolute;
+  bottom: -1px;
+  left: 0;
+  width: 100%;
+  height: 2px;
   background: #050505;
-  color: #fff;
-  border-color: #050505;
-  box-shadow: 0 4px 14px rgba(0,0,0,0.15);
 }
 .inboxScreen {
   width: min(760px, 100%);
