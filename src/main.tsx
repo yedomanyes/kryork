@@ -435,11 +435,10 @@ function App() {
 
   const searchResults = useMemo(() => {
     const searchTerm = query.trim().toLowerCase();
-    const allItems = [...categories, ...products];
-    if (!searchTerm) return allItems.slice(0, 6);
+    if (!searchTerm) return products.slice(0, 4);
 
-    return allItems.filter((item) =>
-      `${item.name} ${'detail' in item ? item.detail : item.material}`.toLowerCase().includes(searchTerm),
+    return products.filter((item) =>
+      `${item.name} ${item.material}`.toLowerCase().includes(searchTerm),
     );
   }, [query]);
 
@@ -661,15 +660,22 @@ function App() {
           <div className="searchScreen">
             <span>SUCHE</span>
             <input autoFocus value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Kette, Ring, Silber, Gold suchen..." />
-            <div className="searchResults">
-              {searchResults.map((item) => (
-                <a href="#shop" onClick={() => setActiveOverlay(null)} key={item.name}>
-                  <strong>{item.name}</strong>
-                  <small>{'detail' in item ? item.detail : `${item.material} · ${item.price}`}</small>
+            <div className="productGridClean" style={{ marginTop: '24px' }}>
+              {searchResults.map((product) => (
+                <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => { setActiveOverlay(null); openProductDetail(e, product); }} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div className="discountBadge">{product.off}</div>
+                  {product.images && product.images.length > 0 ? (
+                    <img src={product.images[0]} alt={product.name} className="productCardImg" />
+                  ) : (
+                    <ProductVisual tone={product.tone} />
+                  )}
+                  <div className="materialLine"><span />{product.material}</div>
+                  <h3>{product.name}</h3>
+                  <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
                 </a>
               ))}
-              {searchResults.length === 0 && <p>Keine Ergebnisse gefunden.</p>}
             </div>
+            {searchResults.length === 0 && <p style={{ marginTop: '24px', textAlign: 'center' }}>Keine Ergebnisse gefunden.</p>}
           </div>
         </section>
       )}
