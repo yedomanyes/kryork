@@ -661,6 +661,9 @@ img { display: block; max-width: 100%; }
   position: relative;
   text-align: center;
   transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  height: 100%;
 }
 .productCardClean:hover {
   transform: scale(1.02);
@@ -723,11 +726,16 @@ img { display: block; max-width: 100%; }
   color: #050505;
   font-size: 20px;
   letter-spacing: -.02em;
+  flex-grow: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
 }
 .productCardClean p {
   margin: 14px 0 0;
   color: #9b9b9b;
   font-size: 18px;
+  margin-top: auto;
 }
 .productCardClean p strong { color: #8e1914; font-weight: 500; }
 
@@ -984,8 +992,8 @@ img { display: block; max-width: 100%; }
   overflow-y: auto;
 }
 .searchScreen .productGridClean {
-  grid-template-columns: repeat(auto-fill, minmax(130px, 1fr));
-  gap: 12px;
+  grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+  gap: 16px;
 }
 @media (max-width: 640px) {
   .searchScreen .productGridClean {
