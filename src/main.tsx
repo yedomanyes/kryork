@@ -260,6 +260,21 @@ function App() {
   
   const filteredShopProducts = useMemo(() => {
     let result = products;
+    
+    // Category Filter
+    if (activePage === 'category' && activeCategory) {
+       const catName = activeCategory.name.toLowerCase();
+       result = result.filter(p => {
+          if (!p.name) return true;
+          const name = String(p.name).toLowerCase();
+          if (catName.includes('kette') || catName.includes('chain')) return name.includes('kette') || name.includes('chain') || name.includes('set');
+          if (catName.includes('armband') || catName.includes('bracelet')) return name.includes('armband') || name.includes('bracelet') || name.includes('set');
+          if (catName.includes('ring')) return name.includes('ring');
+          if (catName.includes('anhänger') || catName.includes('pendant')) return name.includes('pendant') || name.includes('anhänger');
+          return true;
+       });
+    }
+
     if (shopFilterMaterial.length > 0) {
       result = result.filter(p => shopFilterMaterial.some(m => (p.material && String(p.material).includes(m)) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
     }
@@ -285,7 +300,7 @@ function App() {
       });
     }
     return result;
-  }, [products, shopFilterMaterial, shopFilterStyle, shopFilterPrice]);
+  }, [products, shopFilterMaterial, shopFilterStyle, shopFilterPrice, activePage, activeCategory]);
   const [dbReady, setDbReady] = useState(false);
 
   // Track page view on mount — only if consent given
@@ -932,27 +947,28 @@ function App() {
               <h3>Filter</h3>
               <div className="filterGroup">
                 <h4>Material</h4>
-                <label><input type="checkbox" /> 14k Gold</label>
-                <label><input type="checkbox" /> 925 Silber</label>
-                <label><input type="checkbox" /> Weißgold</label>
+                <label><input type="checkbox" checked={shopFilterMaterial.includes('14k Gold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '14k Gold'] : prev.filter(v => v !== '14k Gold'))} /> 14k Gold</label>
+                <label><input type="checkbox" checked={shopFilterMaterial.includes('925 Silber')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '925 Silber'] : prev.filter(v => v !== '925 Silber'))} /> 925 Silber</label>
+                <label><input type="checkbox" checked={shopFilterMaterial.includes('Weißgold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, 'Weißgold'] : prev.filter(v => v !== 'Weißgold'))} /> Weißgold</label>
               </div>
               <div className="filterGroup">
                 <h4>Style</h4>
-                <label><input type="checkbox" /> Iced Out</label>
-                <label><input type="checkbox" /> Plain</label>
-                <label><input type="checkbox" /> Custom</label>
+                <label><input type="checkbox" checked={shopFilterStyle.includes('Iced Out')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Iced Out'] : prev.filter(v => v !== 'Iced Out'))} /> Iced Out</label>
+                <label><input type="checkbox" checked={shopFilterStyle.includes('Plain')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Plain'] : prev.filter(v => v !== 'Plain'))} /> Plain</label>
+                <label><input type="checkbox" checked={shopFilterStyle.includes('Custom')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Custom'] : prev.filter(v => v !== 'Custom'))} /> Custom</label>
               </div>
               <div className="filterGroup">
                 <h4>Preis</h4>
-                <label><input type="radio" name="price" /> Unter €100</label>
-                <label><input type="radio" name="price" /> €100 - €300</label>
-                <label><input type="radio" name="price" /> Über €300</label>
+                <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'under100'} onChange={() => setShopFilterPrice('under100')} /> Unter €100</label>
+                <label><input type="radio" name="shopPrice" checked={shopFilterPrice === '100to300'} onChange={() => setShopFilterPrice('100to300')} /> €100 - €300</label>
+                <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'over300'} onChange={() => setShopFilterPrice('over300')} /> Über €300</label>
+                {shopFilterPrice && <button onClick={() => setShopFilterPrice(null)} style={{marginTop:'8px', fontSize:'12px', background:'transparent', border:'none', color:'#666', cursor:'pointer', padding:0}}>Preis-Filter zurücksetzen</button>}
               </div>
             </aside>
             
             <div className="categoryContent">
-              <div className="categoryProductGrid">
-                {products.map((product) => (
+              <div className="productGridClean">
+                {filteredShopProducts.map((product) => (
                   <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
                     <div className="discountBadge">{product.off}</div>
                     {product.images && product.images.length > 0 ? (
@@ -960,14 +976,9 @@ function App() {
                     ) : (
                       <ProductVisual tone={product.tone} />
                     )}
-                    <div className="productInfoClean">
-                      <h3>{product.name}</h3>
-                      <p>{product.material}</p>
-                      <div className="priceLine">
-                        <span className="priceOld">{product.oldPrice}</span>
-                        <span className="priceNew">{product.price}</span>
-                      </div>
-                    </div>
+                    <div className="materialLine"><span />{product.material}</div>
+                    <h3>{product.name}</h3>
+                    <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
                   </a>
                 ))}
               </div>
@@ -1369,47 +1380,23 @@ function App() {
             <button>→</button>
           </div>
         </div>
-        <div className="categoryLayout">
-          <aside className="categorySidebar">
-            <h3>Filter</h3>
-            <div className="filterGroup">
-              <h4>Material</h4>
-              <label><input type="checkbox" checked={shopFilterMaterial.includes('14k Gold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '14k Gold'] : prev.filter(v => v !== '14k Gold'))} /> 14k Gold</label>
-              <label><input type="checkbox" checked={shopFilterMaterial.includes('925 Silber')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '925 Silber'] : prev.filter(v => v !== '925 Silber'))} /> 925 Silber</label>
-              <label><input type="checkbox" checked={shopFilterMaterial.includes('Weißgold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, 'Weißgold'] : prev.filter(v => v !== 'Weißgold'))} /> Weißgold</label>
-            </div>
-            <div className="filterGroup">
-              <h4>Style</h4>
-              <label><input type="checkbox" checked={shopFilterStyle.includes('Iced Out')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Iced Out'] : prev.filter(v => v !== 'Iced Out'))} /> Iced Out</label>
-              <label><input type="checkbox" checked={shopFilterStyle.includes('Plain')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Plain'] : prev.filter(v => v !== 'Plain'))} /> Plain</label>
-              <label><input type="checkbox" checked={shopFilterStyle.includes('Custom')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Custom'] : prev.filter(v => v !== 'Custom'))} /> Custom</label>
-            </div>
-            <div className="filterGroup">
-              <h4>Preis</h4>
-              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'under100'} onChange={() => setShopFilterPrice('under100')} /> Unter €100</label>
-              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === '100to300'} onChange={() => setShopFilterPrice('100to300')} /> €100 - €300</label>
-              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'over300'} onChange={() => setShopFilterPrice('over300')} /> Über €300</label>
-              {shopFilterPrice && <button onClick={() => setShopFilterPrice(null)} style={{marginTop:'8px', fontSize:'12px', background:'transparent', border:'none', color:'#666', cursor:'pointer', padding:0}}>Preis-Filter zurücksetzen</button>}
-            </div>
-          </aside>
-          
-          <div className="categoryContent">
-            <div className="productGridClean">
-              {filteredShopProducts.map((product) => (
-                <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
-                  <div className="discountBadge">{product.off}</div>
-                  {product.images && product.images.length > 0 ? (
-                    <img src={product.images[0]} alt={product.name} className="productCardImg" />
-                  ) : (
-                    <ProductVisual tone={product.tone} />
-                  )}
-                  <div className="materialLine"><span />{product.material}</div>
-                  <h3>{product.name}</h3>
-                  <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
-                </a>
-              ))}
-            </div>
-          </div>
+        <div className="productGridClean">
+          {products.slice(0, 8).map((product) => (
+            <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
+              <div className="discountBadge">{product.off}</div>
+              {product.images && product.images.length > 0 ? (
+                <img src={product.images[0]} alt={product.name} className="productCardImg" />
+              ) : (
+                <ProductVisual tone={product.tone} />
+              )}
+              <div className="materialLine"><span />{product.material}</div>
+              <h3>{product.name}</h3>
+              <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
+            </a>
+          ))}
+        </div>
+        <div style={{ textAlign: 'center', marginTop: '40px' }}>
+          <button className="primaryBtn" style={{ padding: '12px 32px' }} onClick={() => { window.scrollTo({top:0, behavior:'smooth'}); setActiveOverlay('search'); }}>Alle Produkte ansehen</button>
         </div>
       </section>
 
