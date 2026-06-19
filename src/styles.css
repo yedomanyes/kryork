@@ -36,7 +36,7 @@ img { display: block; max-width: 100%; }
 
 .pageShell {
   min-height: 100vh;
-  overflow: hidden;
+  overflow: clip;
   background: #ffffff;
 }
 

@@ -238,6 +238,36 @@ function App() {
   const [activePage, setActivePage] = useState<'home' | 'customHub' | 'customUpload' | 'productDetail' | 'category' | 'adminDashboard' | 'impressum' | 'datenschutz' | 'terms' | 'widerruf'>('home');
   const [activeProduct, setActiveProduct] = useState<Product | null>(null);
   const [activeCategory, setActiveCategory] = useState<Category | null>(null);
+  
+  const [shopFilterMaterial, setShopFilterMaterial] = useState<string[]>([]);
+  const [shopFilterStyle, setShopFilterStyle] = useState<string[]>([]);
+  const [shopFilterPrice, setShopFilterPrice] = useState<string | null>(null);
+
+  const filteredShopProducts = useMemo(() => {
+    let result = products;
+    if (shopFilterMaterial.length > 0) {
+      result = result.filter(p => shopFilterMaterial.some(m => p.material.includes(m) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
+    }
+    if (shopFilterStyle.length > 0) {
+      result = result.filter(p => shopFilterStyle.some(s => {
+        if (s === 'Iced Out') return p.name.toLowerCase().includes('iced') || p.name.toLowerCase().includes('diamond');
+        if (s === 'Plain') return !p.name.toLowerCase().includes('iced') && !p.name.toLowerCase().includes('diamond');
+        if (s === 'Custom') return p.name.toLowerCase().includes('custom');
+        return true;
+      }));
+    }
+    if (shopFilterPrice) {
+      result = result.filter(p => {
+        const numPrice = parseInt(p.price.replace(/[^0-9]/g, ''), 10);
+        if (shopFilterPrice === 'under100') return numPrice < 100;
+        if (shopFilterPrice === '100to300') return numPrice >= 100 && numPrice <= 300;
+        if (shopFilterPrice === 'over300') return numPrice > 300;
+        return true;
+      });
+    }
+    return result;
+  }, [shopFilterMaterial, shopFilterStyle, shopFilterPrice]);
+
   const [customImage, setCustomImage] = useState<File | null>(null);
   const [customDesc, setCustomDesc] = useState('');
   const [customStatus, setCustomStatus] = useState<'idle' | 'loading' | 'success' | 'error'>('idle');
@@ -633,9 +663,13 @@ function App() {
                       else { setActiveOverlay(null); }
                     }
                   } else {
-                    const { error } = await supabase.auth.signUp({ email: loginEmail, password: loginPassword });
+                    const { data, error } = await supabase.auth.signUp({ email: loginEmail, password: loginPassword });
                     if (error) { setLoginError(error.message); return; }
-                    setLoginError('Bestätigungs-E-Mail gesendet! Bitte E-Mail bestätigen.');
+                    if (data.session) {
+                      setActiveOverlay(null);
+                    } else {
+                      setLoginError('Account erstellt! Falls E-Mail-Bestätigung aktiv ist, prüfe dein Postfach.');
+                    }
                   }
                 } finally {
                   setLoginLoading(false);
@@ -1329,20 +1363,47 @@ function App() {
             <button>→</button>
           </div>
         </div>
-        <div className="productGridClean">
-          {products.map((product) => (
-            <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
-              <div className="discountBadge">{product.off}</div>
-              {product.images && product.images.length > 0 ? (
-                <img src={product.images[0]} alt={product.name} className="productCardImg" />
-              ) : (
-                <ProductVisual tone={product.tone} />
-              )}
-              <div className="materialLine"><span />{product.material}</div>
-              <h3>{product.name}</h3>
-              <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
-            </a>
-          ))}
+        <div className="categoryLayout">
+          <aside className="categorySidebar">
+            <h3>Filter</h3>
+            <div className="filterGroup">
+              <h4>Material</h4>
+              <label><input type="checkbox" checked={shopFilterMaterial.includes('14k Gold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '14k Gold'] : prev.filter(v => v !== '14k Gold'))} /> 14k Gold</label>
+              <label><input type="checkbox" checked={shopFilterMaterial.includes('925 Silber')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, '925 Silber'] : prev.filter(v => v !== '925 Silber'))} /> 925 Silber</label>
+              <label><input type="checkbox" checked={shopFilterMaterial.includes('Weißgold')} onChange={(e) => setShopFilterMaterial(prev => e.target.checked ? [...prev, 'Weißgold'] : prev.filter(v => v !== 'Weißgold'))} /> Weißgold</label>
+            </div>
+            <div className="filterGroup">
+              <h4>Style</h4>
+              <label><input type="checkbox" checked={shopFilterStyle.includes('Iced Out')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Iced Out'] : prev.filter(v => v !== 'Iced Out'))} /> Iced Out</label>
+              <label><input type="checkbox" checked={shopFilterStyle.includes('Plain')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Plain'] : prev.filter(v => v !== 'Plain'))} /> Plain</label>
+              <label><input type="checkbox" checked={shopFilterStyle.includes('Custom')} onChange={(e) => setShopFilterStyle(prev => e.target.checked ? [...prev, 'Custom'] : prev.filter(v => v !== 'Custom'))} /> Custom</label>
+            </div>
+            <div className="filterGroup">
+              <h4>Preis</h4>
+              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'under100'} onChange={() => setShopFilterPrice('under100')} /> Unter €100</label>
+              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === '100to300'} onChange={() => setShopFilterPrice('100to300')} /> €100 - €300</label>
+              <label><input type="radio" name="shopPrice" checked={shopFilterPrice === 'over300'} onChange={() => setShopFilterPrice('over300')} /> Über €300</label>
+              {shopFilterPrice && <button onClick={() => setShopFilterPrice(null)} style={{marginTop:'8px', fontSize:'12px', background:'transparent', border:'none', color:'#666', cursor:'pointer', padding:0}}>Preis-Filter zurücksetzen</button>}
+            </div>
+          </aside>
+          
+          <div className="categoryContent">
+            <div className="productGridClean">
+              {filteredShopProducts.map((product) => (
+                <a className="productCardClean" href="#shop" key={product.name} onClick={(e) => openProductDetail(e, product)} style={{ textDecoration: 'none', color: 'inherit' }}>
+                  <div className="discountBadge">{product.off}</div>
+                  {product.images && product.images.length > 0 ? (
+                    <img src={product.images[0]} alt={product.name} className="productCardImg" />
+                  ) : (
+                    <ProductVisual tone={product.tone} />
+                  )}
+                  <div className="materialLine"><span />{product.material}</div>
+                  <h3>{product.name}</h3>
+                  <p><s>{product.oldPrice}</s> <strong>{product.price}</strong></p>
+                </a>
+              ))}
+            </div>
+          </div>
         </div>
       </section>
 
