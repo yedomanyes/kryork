@@ -246,10 +246,11 @@ function App() {
   const filteredShopProducts = useMemo(() => {
     let result = products;
     if (shopFilterMaterial.length > 0) {
-      result = result.filter(p => shopFilterMaterial.some(m => p.material.includes(m) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
+      result = result.filter(p => shopFilterMaterial.some(m => (p.material && p.material.includes(m)) || (m === '14k Gold' && p.tone === 'gold') || (m === '925 Silber' && p.tone === 'silver')));
     }
     if (shopFilterStyle.length > 0) {
       result = result.filter(p => shopFilterStyle.some(s => {
+        if (!p.name) return true;
         if (s === 'Iced Out') return p.name.toLowerCase().includes('iced') || p.name.toLowerCase().includes('diamond');
         if (s === 'Plain') return !p.name.toLowerCase().includes('iced') && !p.name.toLowerCase().includes('diamond');
         if (s === 'Custom') return p.name.toLowerCase().includes('custom');
@@ -258,7 +259,9 @@ function App() {
     }
     if (shopFilterPrice) {
       result = result.filter(p => {
+        if (!p.price) return true;
         const numPrice = parseInt(p.price.replace(/[^0-9]/g, ''), 10);
+        if (isNaN(numPrice)) return true;
         if (shopFilterPrice === 'under100') return numPrice < 100;
         if (shopFilterPrice === '100to300') return numPrice >= 100 && numPrice <= 300;
         if (shopFilterPrice === 'over300') return numPrice > 300;
